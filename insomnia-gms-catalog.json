@@ -1,0 +1,328 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-07-13T00:00:00.000Z",
+  "__export_source": "gms-catalog",
+  "resources": [
+    {
+      "_id": "wrk_gms_catalog",
+      "parentId": null,
+      "modified": 1752374400000,
+      "created": 1752374400000,
+      "name": "GMS Catalog",
+      "description": "GraphQL API requests for the GMS Catalog server",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_gms_catalog",
+      "parentId": "wrk_gms_catalog",
+      "modified": 1752374400000,
+      "created": 1752374400000,
+      "name": "Base Environment",
+      "data": {
+        "graphqlUrl": "http://localhost:4000/graphql",
+        "authToken": ""
+      },
+      "dataPropertyOrder": ["graphqlUrl", "authToken"],
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 0,
+      "_type": "environment"
+    },
+    {
+      "_id": "fld_auth",
+      "parentId": "wrk_gms_catalog",
+      "modified": 1752374400000,
+      "created": 1752374400000,
+      "name": "Auth",
+      "description": "Authentication mutations",
+      "environment": {},
+      "metaSortKey": -1000000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_games",
+      "parentId": "wrk_gms_catalog",
+      "modified": 1752374400000,
+      "created": 1752374400000,
+      "name": "Games",
+      "description": "Game and played-game operations",
+      "environment": {},
+      "metaSortKey": -999999,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_register",
+      "parentId": "fld_auth",
+      "modified": 1752374400000,
+      "created": 1752374400000,
+      "url": "{{ graphqlUrl }}",
+      "name": "Register",
+      "description": "Register a new user",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"query\": \"mutation Register($data: RegisterInput!) { register(data: $data) { token refreshToken user { id email role } } }\",\n  \"variables\": {\n    \"data\": {\n      \"name\": \"Alice\",\n      \"email\": \"alice@example.com\",\n      \"password\": \"Password123!\"\n    }\n  }\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": -1000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_login",
+      "parentId": "fld_auth",
+      "modified": 1752374400000,
+      "created": 1752374400000,
+      "url": "{{ graphqlUrl }}",
+      "name": "Login",
+      "description": "Authenticate and receive JWT tokens",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"query\": \"mutation Login($data: LoginInput!) { login(data: $data) { token refreshToken user { id email role } } }\",\n  \"variables\": {\n    \"data\": {\n      \"email\": \"alice@example.com\",\n      \"password\": \"Password123!\"\n    }\n  }\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": -999999,
+      "_type": "request"
+    },
+    {
+      "_id": "req_list_games",
+      "parentId": "fld_games",
+      "modified": 1752374400000,
+      "created": 1752374400000,
+      "url": "{{ graphqlUrl }}",
+      "name": "List Games",
+      "description": "List active games with optional filters",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"query\": \"query ListGames($filters: GameListFilterInput) { listGames(filters: $filters) { id title slug description averageScore reviewCount playedCount } }\",\n  \"variables\": {\n    \"filters\": {\n      \"title\": \"Hades\",\n      \"sortBy\": \"averageScore\",\n      \"order\": \"desc\"\n    }\n  }\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ authToken }}"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": -1000000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_game",
+      "parentId": "fld_games",
+      "modified": 1752374400000,
+      "created": 1752374400000,
+      "url": "{{ graphqlUrl }}",
+      "name": "Create Game",
+      "description": "Create a game (admin only)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"query\": \"mutation CreateGame($data: CreateGameInput!) { createGame(data: $data) { id title slug description } }\",\n  \"variables\": {\n    \"data\": {\n      \"title\": \"Hades\",\n      \"slug\": \"hades\",\n      \"description\": \"A great action game\",\n      \"developer\": \"Supergiant Games\",\n      \"genres\": \"Action, Roguelike\"\n    }\n  }\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ authToken }}"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": -999999,
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_game",
+      "parentId": "fld_games",
+      "modified": 1752374400000,
+      "created": 1752374400000,
+      "url": "{{ graphqlUrl }}",
+      "name": "Update Game",
+      "description": "Update a game by id (admin only)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"query\": \"mutation UpdateGame($id: String!, $data: UpdateGameInput!) { updateGame(id: $id, data: $data) { id title } }\",\n  \"variables\": {\n    \"id\": \"REPLACE_WITH_GAME_ID\",\n    \"data\": {\n      \"description\": \"Updated description\"\n    }\n  }\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ authToken }}"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": -999998,
+      "_type": "request"
+    },
+    {
+      "_id": "req_delete_game",
+      "parentId": "fld_games",
+      "modified": 1752374400000,
+      "created": 1752374400000,
+      "url": "{{ graphqlUrl }}",
+      "name": "Delete Game",
+      "description": "Delete a game by id (admin only)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"query\": \"mutation DeleteGame($id: String!) { deleteGame(id: $id) }\",\n  \"variables\": {\n    \"id\": \"REPLACE_WITH_GAME_ID\"\n  }\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ authToken }}"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": -999997,
+      "_type": "request"
+    },
+    {
+      "_id": "req_my_played_games",
+      "parentId": "fld_games",
+      "modified": 1752374400000,
+      "created": 1752374400000,
+      "url": "{{ graphqlUrl }}",
+      "name": "My Played Games",
+      "description": "Get played games for the authenticated user",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"query\": \"query MyPlayedGames { myPlayedGames { id status personalScore reviewNote notes game { id title } } }\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ authToken }}"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": -999996,
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_played_game",
+      "parentId": "fld_games",
+      "modified": 1752374400000,
+      "created": 1752374400000,
+      "url": "{{ graphqlUrl }}",
+      "name": "Create Played Game",
+      "description": "Link a game to the authenticated user",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"query\": \"mutation CreatePlayedGame($gameId: String!, $data: CreatePlayedGameInput) { createPlayedGame(gameId: $gameId, data: $data) { id status personalScore reviewNote notes } }\",\n  \"variables\": {\n    \"gameId\": \"REPLACE_WITH_GAME_ID\",\n    \"data\": {\n      \"status\": \"PLAYED\",\n      \"personalScore\": 9,\n      \"reviewNote\": \"Great experience\"\n    }\n  }\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ authToken }}"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": -999995,
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_played_game",
+      "parentId": "fld_games",
+      "modified": 1752374400000,
+      "created": 1752374400000,
+      "url": "{{ graphqlUrl }}",
+      "name": "Update Played Game",
+      "description": "Update a played-game record owned by the current user",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"query\": \"mutation UpdatePlayedGame($id: String!, $data: UpdatePlayedGameInput!) { updatePlayedGame(id: $id, data: $data) { id status personalScore } }\",\n  \"variables\": {\n    \"id\": \"REPLACE_WITH_PLAYED_GAME_ID\",\n    \"data\": {\n      \"personalScore\": 10\n    }\n  }\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ authToken }}"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": -999994,
+      "_type": "request"
+    },
+    {
+      "_id": "req_delete_played_game",
+      "parentId": "fld_games",
+      "modified": 1752374400000,
+      "created": 1752374400000,
+      "url": "{{ graphqlUrl }}",
+      "name": "Delete Played Game",
+      "description": "Delete a played-game record owned by the current user",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"query\": \"mutation DeletePlayedGame($id: String!) { deletePlayedGame(id: $id) }\",\n  \"variables\": {\n    \"id\": \"REPLACE_WITH_PLAYED_GAME_ID\"\n  }\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ authToken }}"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": -999993,
+      "_type": "request"
+    }
+  ]
+}

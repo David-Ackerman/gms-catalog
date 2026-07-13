@@ -3,14 +3,15 @@ import jwt, { Secret, SignOptions } from "jsonwebtoken";
 export type JwtPayload = {
   id: string;
   email: string;
+  role: "USER" | "ADMIN";
 };
 
 export const signJwt = (payload: JwtPayload, expiresIn?: string): string => {
   const secret: Secret = process.env.JWT_SECRET as unknown as Secret;
-  let options: SignOptions;
+  const options: SignOptions = {};
 
   if (expiresIn) {
-    options = { expiresIn: expiresIn as NonNullable<SignOptions>["expiresIn"] };
+    options.expiresIn = expiresIn as NonNullable<SignOptions>["expiresIn"];
   }
   return jwt.sign(payload, secret, options);
 };

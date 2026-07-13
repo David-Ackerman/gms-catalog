@@ -3,14 +3,14 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "target": "ES2023",
+    "types": ["node"],
     "strict": true,
     "esModuleInterop": true,
     "ignoreDeprecations": "6.0",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   }
 }

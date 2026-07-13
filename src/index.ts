@@ -5,17 +5,32 @@ import express from "express";
 import cors from "cors";
 import { buildSchema } from "type-graphql";
 import { buildContext } from "@/graphql/context";
+import { AuthResolver } from "@/resolvers/auth.resolver";
+import { GameResolver } from "@/resolvers/game.resolver";
+import { PlayedGameResolver } from "@/resolvers/played-game.resolver";
+import { seedDatabase } from "@/seed";
+import "dotenv/config";
+
+const requiredEnv = ["JWT_SECRET"] as const;
+
+function validateEnv() {
+  const missing = requiredEnv.filter((key) => !process.env[key]);
+  if (missing.length) {
+    throw new Error(
+      `Missing required environment variables: ${missing.join(", ")}`,
+    );
+  }
+}
 
 async function startServer() {
+  validateEnv();
+
   const app = express();
 
+  await seedDatabase();
+
   const schema = await buildSchema({
-    resolvers: [
-      // AuthResolver,
-      // UserResolver,
-      // CategoryResolver,
-      // TransactionResolver,
-    ],
+    resolvers: [AuthResolver, GameResolver, PlayedGameResolver],
     validate: false,
     emitSchemaFile: "./schema.graphql",
   });
